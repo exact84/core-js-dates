@@ -141,8 +141,8 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  return new Date(date).toLocaleString('en-US', { timeZone: 'UTC' });
 }
 
 /**
@@ -157,8 +157,20 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  let result = 0;
+  const totaldays =
+    (new Date(Date.UTC(year, month, 1)) -
+      new Date(Date.UTC(year, month - 1, 1))) /
+    (1000 * 60 * 60 * 24);
+  for (let i = 1; i <= totaldays; i += 1) {
+    if (
+      new Date(Date.UTC(year, month - 1, i)).getDay() === 6 ||
+      new Date(Date.UTC(year, month - 1, i)).getDay() === 0
+    )
+      result += 1;
+  }
+  return result;
 }
 
 /**
@@ -174,8 +186,11 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  return Math.ceil(
+    (new Date(date) - new Date(date.getFullYear(), 0, 0)) /
+      (7 * 1000 * 60 * 60 * 24)
+  );
 }
 
 /**
@@ -189,8 +204,27 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  let curDate = date;
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  if (curDate.getDate() >= 13) {
+    month += 1;
+    if (month === 12) {
+      month = 0;
+      year += 1;
+    }
+  }
+  curDate = new Date(year, month, 13);
+  while (curDate.getDay() !== 5) {
+    month += 1;
+    if (month === 12) {
+      month = 0;
+      year += 1;
+    }
+    curDate = new Date(year, month, 13);
+  }
+  return curDate;
 }
 
 /**
