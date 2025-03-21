@@ -46,8 +46,12 @@ function getTime(date) {
  * '03 Dec 1995 00:12:00 UTC' => 'Sunday'
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
-function getDayName(/* date */) {
-  throw new Error('Not implemented');
+function getDayName(date) {
+  const newDate = new Date(date);
+  return newDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'UTC',
+  });
 }
 
 /**
@@ -61,8 +65,11 @@ function getDayName(/* date */) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const date1 = new Date(date);
+  return new Date(
+    date1.setDate(date1.getDate() + ((5 + 7 - date1.getDay()) % 7 || 7))
+  );
 }
 
 /**
@@ -76,8 +83,10 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const date1 = new Date(Date.UTC(year, month - 1, 1));
+  const date2 = new Date(Date.UTC(year, month, 1));
+  return (date2 - date1) / (1000 * 60 * 60 * 24);
 }
 
 /**
